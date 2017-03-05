@@ -3,6 +3,8 @@ SEO Analyser
 
 SEO Anayser is web application built using ASP.NET MVC5. 
 
+Demo site : http://seoanalyser20170305094810.azurewebsites.net/
+
 Using this simple Web application user can enter a text in English or  url and analyse words for SEO purpose. 
 
 Application calclulates number of occurences on the page of each word. 
