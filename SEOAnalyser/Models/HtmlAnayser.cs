@@ -230,6 +230,7 @@ namespace SEOAnalyser.Models
 
                 }
 
+
                 ExternalLinks = _externalLinks.GroupBy(x => x).ToDictionary(x => x.Key, x => x.Count());
             }
             catch (Exception)
