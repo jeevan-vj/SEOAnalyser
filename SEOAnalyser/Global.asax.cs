@@ -17,5 +17,21 @@ namespace SEOAnalyser
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
         }
+
+        protected void Application_Error(object sender, EventArgs e) {
+            HttpContext ctx = HttpContext.Current;
+            ctx.Response.Clear();
+            RequestContext rc = ((MvcHandler)ctx.CurrentHandler).RequestContext;
+            rc.RouteData.Values["action"] = "Error";
+
+            rc.RouteData.Values["controller"] = "Home";
+            
+
+            IControllerFactory factory = ControllerBuilder.Current.GetControllerFactory();
+            IController controller = factory.CreateController(rc, "Home");
+            controller.Execute(rc);
+            ctx.Server.ClearError();
+
+        }
     }
 }

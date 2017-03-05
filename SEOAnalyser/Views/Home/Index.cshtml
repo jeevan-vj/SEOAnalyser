@@ -10,8 +10,109 @@
 
 </div>
 
+@Html.ValidationSummary()
+
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-12">
+        <form role="form" action="@Url.Action("index","home")" method="post" id="seoform">
+            <div class="form-group">
+                <label class="radio-inline"><input type="radio" name="selectionType" checked value="text">Text</label>
+                <label class="radio-inline"><input type="radio" name="selectionType" value="url">Url</label>
+            </div>
+            <div class="form-group">
+                <label class="checkbox-inline" id="removestopwords">
+                    @Html.CheckBox("removestopwords")Remove Stop Words
+                </label>
+                <label class="checkbox-inline" id="calcexternallinks" style="display:none;">
+                    @Html.CheckBox("calcexternallinks") Calculate External Links
+                </label>
+                <label class="checkbox-inline" id="calcmetatagword" style="display:none;">
+                    @Html.CheckBox("calcmetatagword") Calculate Meta Tag Words
+                </label>
+              
+            </div>
+            <div class="form-group" id="urlAria" style="display:none;">
+                <label class="control-label">Value</label>
+                <input type="text" name="urlvalue" class="form-control" id="urlValue" placeholder="Enter url" />
+            </div>
+            <div class="form-group" id="textAria">
+                <label class="control-label">Value</label>
+                <textarea type="text" name="textvalue" style="height:300px;" class="form-control" id="textvalue" placeholder="Enter text"></textarea>
+            </div>
+
+          
+            <button type="submit" class="btn btn-default">Submit</button>
+        </form>
     </div>
-   
+
 </div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModal-label">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModal-label">Working</h4>
+            </div>
+            <div class="modal-body">
+                <p>Wait while we are processing you request</p>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $('input[type=radio][name=selectionType]').change(function () {
+                if (this.value == 'text') {
+                   
+                    $('#urlAria').slideUp();
+                    $('#textAria').slideDown();
+                    $('#calcexternallinks').hide('slow');
+                    $('#calcmetatagword').hide('hide');
+                    $('#calcexternallinks').prop("checked", false);
+                    $('#calcmetatagword').prop("checked", false);
+                    
+                }
+                else if (this.value == 'url') {
+                    $('#textAria').slideUp();
+                    $('#urlAria').slideDown();
+                    $('#calcexternallinks').show('slow');
+                    $('#calcmetatagword').show('slow');
+
+                   
+                }
+            });
+        });
+        $("#seoform").submit(function (event) {
+           
+            if ($('input[type=radio][name=selectionType]:checked').val() == 'url') {
+                var val = $('#urlValue').val();
+                if (!val) {
+                    return false;
+                }
+                else {
+                    if (!isUrlValid(val)) {
+                        alert('Invalid Url');
+                        return false;
+                    }
+                    $('#myModal').modal('show');
+                }
+            }
+            else {
+                var val2 = $('#textvalue').val();
+                if (!val2) {
+                    alert('Invalid Text');
+                    return false;
+                }
+                $('#myModal').modal('show');
+            }
+        });
+        function isUrlValid(url) {
+            return /^(https?|s?ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@@)|[\uE000-\uF8FF]|\/|\?)*)?(#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@@)|\/|\?)*)?$/i.test(url);
+        }
+    </script>
+}

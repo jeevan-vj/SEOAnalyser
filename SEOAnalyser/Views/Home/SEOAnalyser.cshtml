@@ -1,0 +1,150 @@
+﻿@model SEOAnalyser.Models.ViewModels.SEOAnalyserViewModel
+
+
+@{
+    ViewBag.Title = "SEOAnalyser";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="row" style="margin-top:20px;">
+    <div class="col-sm-12">
+
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Page Word Count</a></li>
+            @if (Model.CalcMetaTags)
+            {
+                <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Meta word Count</a></li>
+            }
+            @if (Model.CalcExternalLinks)
+            {
+                <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Externel Links</a></li>
+            }
+           
+        </ul>
+
+        <!-- Tab panes -->
+
+        <form method="post" action="@Url.Action("SortData","Home")" id="filterform">
+
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="home">
+
+                    <table class="table table-bordered">
+                        <thead>
+                        <th >
+                            Word
+                            <span style="float:right">
+                                Sort
+                                @Html.CheckBoxFor(m => m.IsKeyOrderASCT1)
+                            </span>
+                        </th>
+                        <th>
+                            Count
+                            <span style="float:right">
+                                Sort
+                                @Html.CheckBoxFor(m => m.IsValueOrderASCT1)
+                            </span>
+
+                        </th>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.WordsCount)
+                            {
+                                <tr>
+                                    <td style="width:130px">@item.Key</td>
+                                    <td>@item.Value</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                  
+
+                </div>
+                @if (Model.CalcMetaTags)
+            {
+                    <div role="tabpanel" class="tab-pane" id="profile">
+                        <table class="table table-bordered">
+                            <thead>
+                            <th>
+                                Word
+                                <span style="float:right">
+                                    Sort
+                                    @Html.CheckBoxFor(m => m.IsKeyOrderASCT2)
+                                </span>
+                            </th>
+                            <th>
+                                Count
+                                <span style="float:right">
+                                    Sort
+                                    @Html.CheckBoxFor(m => m.IsValueOrderASCT2)
+                                </span>
+                            </th>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.MetaWordsCount)
+                                {
+                                    <tr>
+                                        <td>@item.Key</td>
+                                        <td>@item.Value</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                @if (Model.CalcMetaTags)
+            {
+                    <div role="tabpanel" class="tab-pane" id="messages">
+                        <table class="table table-bordered">
+                            <thead>
+                            <th>
+                                Link
+                                <span style="float:right">
+                                    Sort
+                                    @Html.CheckBoxFor(m => m.IsKeyOrderASCT3)
+                                </span>
+                            </th>
+                            <th>
+                                Count
+                                <span style="float:right">
+                                    Sort
+                                    @Html.CheckBoxFor(m => m.IsValueOrderASCT3)
+                                </span>
+                            </th>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.ExternalLinksCount)
+                                {
+                                    <tr>
+                                        <td>@item.Key</td>
+                                        <td>@item.Value</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        <br/>
+                        <strong>Total externel Links: @Model.ExternalLinksCount.Values.Sum() </strong>
+                    </div>
+                }
+               
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $('input[type=checkbox]').change(function () {
+                $("#filterform").submit();
+            });
+        });
+
+    </script>
+}
